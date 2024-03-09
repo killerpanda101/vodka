@@ -5,7 +5,7 @@ import cv2
 
 
 class ImageToMasks:
-    def __init__(self, model_name="vit_h", checkpoint="./models/sam_vit_h_4b8939.pth"):
+    def __init__(self, model_name="vit_h", checkpoint="./models/SAM/sam_vit_h_4b8939.pth"):
         # Determine the best available device
         self.device = "cpu"
         if torch.cuda.is_available():
@@ -52,4 +52,4 @@ if __name__ == "__main__":
     image = cv2.imread("images/telephone_booth.jpg")
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     sam = ImageToMasks()
-    sam.save_cutouts(image, "./temp")
+    sam.save_cutouts(image, "./images")
