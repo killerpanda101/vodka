@@ -7,7 +7,7 @@ from angle_emb import AnglE
 
 class TextToEmbeddings:
 
-    def __init__(self, model="./models/UAE"):
+    def __init__(self, model="./models/UAE-Large-V1"):
         self.angle = AnglE.from_pretrained(
             model_name_or_path=model, pooling_strategy="cls"
         )

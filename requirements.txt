@@ -1,0 +1,8 @@
+angle_emb==0.3.8
+numpy==1.25.1
+opencv_python==4.8.1.78
+Pillow==10.2.0
+segment_anything==1.0
+streamlit==1.25.0
+torch==2.0.1
+transformers==4.38.2
