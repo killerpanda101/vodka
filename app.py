@@ -1,28 +1,75 @@
 import streamlit as st
+import cv2
+from masks_to_text import BlipImageCaptioning
+from text_to_embeddings import TextToEmbeddings
+from PIL import Image
+import numpy as np
+
+# Initialize classes outside of the button press to avoid reinitialization
+@st.cache_resource
+def init_models():
+    blip = BlipImageCaptioning()
+    uae = TextToEmbeddings()
+    return blip, uae
+
+
+st.set_page_config("VODKA", "🥷", layout="wide")
+
+blip, uae = init_models()
 
 css = """
 <style>
 img {
     padding: 10%;
 }
+</style>
 """
+st.markdown(css, unsafe_allow_html=True)
 
-st.set_page_config("VODKA", "🥷", layout="wide")
 
 st.header("Voting Over Distilled Knowledge Associations (VODKA)")
 
-st.file_uploader(
-    label="Upload the image you want segmented", type=["jpg"], help="sfdsfa"
+files = st.file_uploader(
+    label="Upload the cutouts",
+    type=["jpg", "png"],
+    accept_multiple_files=True,
+    help="Upload the top 5 cutouts.",
 )
-st.text_input("Enter the prompt for segmentation", help="dgagagr")
-st.button(label="Process", help="gsdgfgdf")
-images = ["./images/telephone_booth.jpg"] * 5
-st.image(
-    images,
-    width=250,
-    caption=[
-        "some generic text, some generic text, some generic text, some generic text"
-    ]
-    * len(images),
+
+prompt = st.text_input(
+    "Enter the prompt for segmentation",
+    help="Provide a descriptive prompt to guide the segmentation process.",
 )
-st.write(css, unsafe_allow_html=True)
+
+if st.button(label="Process", help="Click to start the segmentation process."):
+    if files is not None and prompt:
+        with st.spinner("Processing image..."):
+            images_cv2 = []
+
+            for file in files:
+                image = Image.open(file)
+                image_np = np.array(image)
+                image_cv2 = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
+                images_cv2.append(image_cv2)
+
+        with st.spinner("Generating descriptions..."):
+            captions = [blip.generate_description(cutout) for cutout in images_cv2]
+            # st.write("Captions:")
+            # st.write(captions)
+
+        with st.spinner("Calculating similarity..."):
+            similarities = [uae.get_similarity(prompt, caption) for caption in captions]
+            # st.write("Similarity Scores:")
+            # st.write(similarity)
+
+        st.image(
+            files,
+            width=250,
+            caption=[f"{c}. {s}" for c, s in zip(captions, similarities)],
+        )
+
+    else:
+        st.error("Please upload an image and enter a prompt to proceed.")
+
+
+

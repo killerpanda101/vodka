@@ -5,7 +5,9 @@ import cv2
 
 
 class ImageToMasks:
-    def __init__(self, model_name="vit_h", checkpoint="./models/SAM/sam_vit_h_4b8939.pth"):
+    def __init__(
+        self, model_name="vit_h", checkpoint="./models/SAM/sam_vit_h_4b8939.pth"
+    ):
         # Determine the best available device
         self.device = "cpu"
         if torch.cuda.is_available():
@@ -15,6 +17,11 @@ class ImageToMasks:
         self.checkpoint = checkpoint
         self.sam = sam_model_registry[self.model_name](checkpoint=self.checkpoint)
         self.sam = self.sam.to(device=self.device)
+
+    def read_image(self, file):
+        image = cv2.imread(file)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        return image
 
     def get_masks(self, image, count=5):
         # get the masks and sort by greatest area
@@ -49,7 +56,6 @@ class ImageToMasks:
 
 
 if __name__ == "__main__":
-    image = cv2.imread("images/telephone_booth.jpg")
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     sam = ImageToMasks()
+    image = sam.read_image("images/telephone_booth.jpg")
     sam.save_cutouts(image, "./images")

@@ -4,24 +4,34 @@ from numpy.linalg import norm
 import torch
 from angle_emb import AnglE
 
+
 class TextToEmbeddings:
 
-    def __init__(self, model='./models/UAE'):
-        self.angle = AnglE.from_pretrained(model_name_or_path=model, pooling_strategy='cls')
+    def __init__(self, model="./models/UAE"):
+        self.angle = AnglE.from_pretrained(
+            model_name_or_path=model, pooling_strategy="cls"
+        )
         if torch.cuda.is_available():
-            self.angle = AnglE.from_pretrained(model_name_or_path=model, pooling_strategy='cls').cuda()
+            self.angle = AnglE.from_pretrained(
+                model_name_or_path=model, pooling_strategy="cls"
+            ).cuda()
         elif torch.backends.mps.is_available():
-            self.angle = AnglE.from_pretrained(model_name_or_path=model, pooling_strategy='cls').to('mps')
+            self.angle = AnglE.from_pretrained(
+                model_name_or_path=model, pooling_strategy="cls"
+            ).to("mps")
 
-
-    # not using prompt for retrieval 
+    # not using prompt for retrieval
     def encode(self, text):
         return self.angle.encode(text, to_numpy=True)
-    
-    
+
     def cosine_similarity(self, vec1, vec2):
-        return np.dot(vec1, vec2)/(norm(vec1)*norm(vec2)) 
-    
+        return np.dot(vec1, vec2) / (norm(vec1) * norm(vec2))
+
+    def get_similarity(self, prompt, caption):
+        prompt_enc = self.encode(prompt)
+        caption_enc = self.encode(caption)
+        return self.cosine_similarity(prompt_enc[0], caption_enc[0])
+
 
 if __name__ == "__main__":
     embed_model = TextToEmbeddings()
@@ -37,4 +47,6 @@ if __name__ == "__main__":
     item_vecs = embed_model.encode(texts)
 
     for idx, item_vec in enumerate(item_vecs):
-        print(f'{idx+1} item and prompt similarity: {embed_model.cosine_similarity(prompt_vec, item_vec)}')
+        print(
+            f"{idx+1} item and prompt similarity: {embed_model.cosine_similarity(prompt_vec, item_vec)}"
+        )
