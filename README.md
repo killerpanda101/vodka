@@ -33,7 +33,8 @@ You will need to download specific models and place them in the `models` directo
 	└── UAE-Large-V1
   ```
  - **BLIP** and **UAE-Large-V1** models are available on Hugging Face. Make sure you have `git-lfs` installed before cloning (`git lfs install`):
-	```bash
+	
+ 	```bash
 	git clone https://huggingface.co/WhereIsAI/UAE-Large-V1
 	git clone https://huggingface.co/Salesforce/blip-image-captioning-large
 	```
@@ -50,7 +51,8 @@ After you have the top-k cutouts, you can use the Streamlit app or the Python sc
 ```
 
 ### Tips for Best Results
-For optimal results, use a descriptive prompt that names the object and mentions the color of the object.
+For optimal results, use a descriptive prompt that names the object and mentions the color of the object.\
+A sample image is available in the `images` folder.
 
 
 
