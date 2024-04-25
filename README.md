@@ -5,6 +5,10 @@ Vodka is image segmentation pipeline designed to automatically segment images ba
 - [BLIP (image captioning model)](https://huggingface.co/docs/transformers/en/model_doc/blip)
 - [UAE-Large-V1 (embedding model)](https://huggingface.co/WhereIsAI/UAE-Large-V1)
 
+![Northeastern RISE 2024 conference poster](vodka.png)
+
+
+
 ## Components
 
 - **`app.py`**:  Is a Streamlit  application that integrates various components of the project together. It processes the top-k cutouts from SAM and the user prompt to generate the best matching image segmentation.
