@@ -162,3 +162,20 @@ cython_debug/
 
 models/*
 !models/.gitkeep
+# Secrets / local config
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets.*
+credentials.json
+# OS / editor
+Thumbs.db
+.vscode/
+*.swp
+# Python
+.venv/
+.ipynb_checkpoints/
+models/*.pt
+*.ckpt
